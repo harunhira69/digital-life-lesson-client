@@ -1,9 +1,8 @@
 import { Link, NavLink } from "react-router";
 import useAuth from "../../hook/useAuth";
 
-
 const Navbar = () => {
-  const { user,  handleSignOut } = useAuth();
+  const { user, handleSignOut } = useAuth();
 
   const navLinkClass = ({ isActive }) =>
     isActive
@@ -19,10 +18,12 @@ const Navbar = () => {
           DigitalLifeLessons
         </Link>
 
-        {/* Links */}
+        {/* Desktop Links */}
         <div className="hidden md:flex items-center gap-6">
           <NavLink to="/" className={navLinkClass}>Home</NavLink>
-          <NavLink to="/public-lessons" className={navLinkClass}>Public Lessons</NavLink>
+          <NavLink to="/public-lessons" className={navLinkClass}>
+            Public Lessons
+          </NavLink>
 
           {user && (
             <>
@@ -43,32 +44,45 @@ const Navbar = () => {
         <div className="flex items-center gap-4">
           {!user ? (
             <>
-              <Link to="auth/login" className="btn btn-outline btn-sm">
+              <Link to="/auth/login" className="btn btn-outline btn-sm">
                 Login
               </Link>
-              <Link to="auth/register" className="btn btn-primary btn-sm">
+              <Link to="/auth/register" className="btn btn-primary btn-sm">
                 Signup
               </Link>
             </>
           ) : (
             <div className="dropdown dropdown-end">
+              {/* Avatar */}
               <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
-                <img
-                  className="w-10 rounded-full"
-                  src={user.photoURL}
-                  alt="user"
-                />
+                <div className="w-10 rounded-full">
+                  <img
+                    src={user.photoURL || "/avatar.png"}
+                    alt="User Avatar"
+                  />
+                </div>
               </label>
+
+              {/* Dropdown */}
               <ul
                 tabIndex={0}
                 className="menu menu-sm dropdown-content mt-3 p-3 shadow bg-base-100 rounded-box w-52"
               >
-                <li className="font-semibold px-2">{user.displayName}</li>
-                <li><Link to="/dashboard">Dashboard</Link></li>
-                <li><Link to="/dashboard/profile">Profile</Link></li>
+                <li className="font-semibold px-2 cursor-default">
+                  {user.displayName || "User"}
+                </li>
                 <li>
-                  <button onClick={handleSignOut} className="text-red-500">
-                    Logout
+                  <Link to="/dashboard">Dashboard</Link>
+                </li>
+                <li>
+                  <Link to="/dashboard/profile">Profile</Link>
+                </li>
+                <li>
+                  <button
+                    onClick={handleSignOut}
+                    className="text-red-500"
+                  >
+                    Log out
                   </button>
                 </li>
               </ul>
