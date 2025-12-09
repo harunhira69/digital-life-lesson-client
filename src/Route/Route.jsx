@@ -24,6 +24,10 @@ const router = createBrowserRouter([
     errorElement:<NotFound></NotFound>,
     children:[
       {
+        index: true,
+        element: <PublicLesson></PublicLesson>
+      },
+      {
         path:'public-lessons',
         Component:PublicLesson
       },
@@ -89,8 +93,11 @@ const router = createBrowserRouter([
     },
   
   ]
+},
+{
+  path: "*",
+  element: <NotFound />
 }
-
 
 ]);
 

@@ -1,12 +1,22 @@
 import { Link, useNavigate } from "react-router";
 import useAuth from "../hook/useAuth";
 import toast from "react-hot-toast";
+import useAxiosSecue from "../hook/useAxiosSecure";
 
 
 
 const Register = () => {
-  const {  createUserEmail,   updateUserProfile,   handleGoogle } = useAuth();
+   const { createUserEmail, updateUserProfile, handleGoogle } = useAuth();
   const navigate = useNavigate();
+  const axiosSecure = useAxiosSecue();
+
+  const saveUserToDB = async (user) => {
+    try {
+      await axiosSecure.post("/users", user);
+    } catch (err) {
+      console.log("DB save error:", err);
+    }
+  };
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -16,20 +26,20 @@ const Register = () => {
     const email = form.email.value;
     const password = form.password.value;
 
-    // Password rules
-    if (!/[A-Z]/.test(password)) {
-      return toast.error("Password must contain an uppercase letter");
-    }
-    if (!/[a-z]/.test(password)) {
-      return toast.error("Password must contain a lowercase letter");
-    }
-    if (password.length < 6) {
-      return toast.error("Password must be at least 6 characters");
-    }
+    if (!/[A-Z]/.test(password)) return toast.error("Password must contain an uppercase letter");
+    if (!/[a-z]/.test(password)) return toast.error("Password must contain a lowercase letter");
+    if (password.length < 6) return toast.error("Password must be at least 6 characters");
 
     try {
       await createUserEmail(email, password);
       await updateUserProfile(name, photo);
+
+      await saveUserToDB({
+        name,
+        email,
+        image: photo,
+      });
+
       toast.success("Account created successfully 🎉");
       navigate("/");
     } catch (error) {
@@ -39,7 +49,15 @@ const Register = () => {
 
   const handleGoogleRegister = async () => {
     try {
-      await handleGoogle();
+      const result = await handleGoogle();
+      const user = result.user;
+
+      await saveUserToDB({
+        name: user.displayName,
+        email: user.email,
+        image: user.photoURL,
+      });
+
       toast.success("Account created with Google ✅");
       navigate("/");
     } catch (error) {

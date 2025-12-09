@@ -27,7 +27,7 @@ useEffect(()=>{
         const statusCode = error.response?.status;
         if(statusCode===401 || statusCode===403){
           handleSignOut().then(()=>{
-               navigate('/login');
+               navigate('auth/login');
           })
     
         }
