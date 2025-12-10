@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
-
 import useAuth from "../../hook/useAuth";
 import { useNavigate } from "react-router";
 import useAxiosSecue from "../../hook/useAxiosSecure";
 
-const PublicLifeLessons = () => {
+const PublicLessons = () => {
   const axiosSecure = useAxiosSecue();
   const { user } = useAuth(); // contains role info: Free, Premium, Admin
   const navigate = useNavigate();
@@ -18,6 +17,18 @@ const PublicLifeLessons = () => {
       .catch((err) => console.error(err));
   }, [axiosSecure]);
 
+  const handleCardClick = (lesson) => {
+    const isPremiumLocked = lesson.accessLevel === "Premium" && user?.role !== "Premium";
+
+    if (isPremiumLocked) {
+      // Redirect Free user to Pricing page
+      navigate("/pricing");
+    } else {
+      // Open lesson details
+      navigate(`/life-lesson/${lesson._id}`);
+    }
+  };
+
   return (
     <div className="px-6 lg:px-20 py-12 bg-gray-50 min-h-screen">
       <h1 className="text-4xl font-bold text-center mb-10">
@@ -26,19 +37,19 @@ const PublicLifeLessons = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {lessons.map((lesson) => {
-          const isPremiumLocked =
-            lesson.accessLevel === "Premium" && user?.role !== "Premium";
+          const isPremiumLocked = lesson.accessLevel === "Premium" && user?.role !== "Premium";
 
           return (
             <div
-              key={lesson.id}
-              className="bg-white shadow-md rounded-lg overflow-hidden p-5 relative"
+              key={lesson._id}
+              className="bg-white shadow-md rounded-lg overflow-hidden p-5 relative cursor-pointer"
+              onClick={() => handleCardClick(lesson)}
             >
               {/* Blurred overlay for locked premium lessons */}
               {isPremiumLocked && (
                 <div className="absolute inset-0 bg-white/70 backdrop-blur-sm flex flex-col items-center justify-center z-10">
                   <span className="text-3xl">🔒</span>
-                  <p className="font-semibold mt-2">
+                  <p className="font-semibold mt-2 text-center">
                     Premium Lesson – Upgrade to view
                   </p>
                 </div>
@@ -83,15 +94,6 @@ const PublicLifeLessons = () => {
                   {lesson.accessLevel}
                 </span>
               </div>
-
-              {/* Buttons */}
-              <button
-                onClick={() => navigate(`/life-lesson/${lesson.id}`)}
-                className="mt-5 w-full bg-indigo-600 text-white py-2 rounded hover:bg-indigo-700 transition"
-                disabled={isPremiumLocked}
-              >
-                See Details
-              </button>
             </div>
           );
         })}
@@ -100,4 +102,4 @@ const PublicLifeLessons = () => {
   );
 };
 
-export default PublicLifeLessons;
+export default PublicLessons;

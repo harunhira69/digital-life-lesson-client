@@ -16,6 +16,8 @@ import Profile from "../Dashboard/Profile/Profile";
 import Terms from "../Component/Footer/Terms/Terms";
 import PrivacyPolicy from "../Component/Footer/PrivacyPolicy/PrivacyPolicy";
 import Support from "../Component/Footer/Support/Support";
+import LessonDetails from "../Pages/LessonDetails/LessonDetails";
+
 
 const router = createBrowserRouter([
   {
@@ -46,6 +48,10 @@ const router = createBrowserRouter([
       {
         path:'support',
         Component:Support
+      },
+      {
+        path:'life-lesson/:id',
+        element:<LessonDetails></LessonDetails>
       }
 
     ]

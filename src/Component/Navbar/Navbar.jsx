@@ -12,7 +12,7 @@ const Navbar = () => {
   return (
     <nav className="sticky top-0 z-50 bg-white shadow-sm">
       <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
-        
+
         {/* Logo */}
         <Link to="/" className="text-2xl font-bold text-primary">
           DigitalLifeLessons
@@ -21,6 +21,7 @@ const Navbar = () => {
         {/* Desktop Links */}
         <div className="hidden md:flex items-center gap-6">
           <NavLink to="/" className={navLinkClass}>Home</NavLink>
+
           <NavLink to="/public-lessons" className={navLinkClass}>
             Public Lessons
           </NavLink>
@@ -30,12 +31,24 @@ const Navbar = () => {
               <NavLink to="/dashboard/add-lesson" className={navLinkClass}>
                 Add Lesson
               </NavLink>
+
               <NavLink to="/dashboard/my-lessons" className={navLinkClass}>
                 My Lessons
               </NavLink>
-              <NavLink to="/pricing" className={navLinkClass}>
-                Upgrade
-              </NavLink>
+
+              {/* ✅ Show only for Free users */}
+              {user.role === "Free" && (
+                <NavLink to="/pricing" className={navLinkClass}>
+                  Upgrade
+                </NavLink>
+              )}
+
+              {/* ✅ Show badge if Premium */}
+              {user.role === "Premium" && (
+                <span className="px-3 py-1 bg-yellow-300 text-gray-800 rounded-full text-sm font-semibold">
+                  Premium ⭐
+                </span>
+              )}
             </>
           )}
         </div>
@@ -71,12 +84,15 @@ const Navbar = () => {
                 <li className="font-semibold px-2 cursor-default">
                   {user.displayName || "User"}
                 </li>
+
                 <li>
                   <Link to="/dashboard">Dashboard</Link>
                 </li>
+
                 <li>
                   <Link to="/dashboard/profile">Profile</Link>
                 </li>
+
                 <li>
                   <button
                     onClick={handleSignOut}

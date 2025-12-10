@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@stripe/stripe-js": "^8.5.3",
     "@tailwindcss/vite": "^4.1.17",
     "axios": "^1.13.2",
     "daisyui": "^5.5.8",
@@ -20,6 +21,7 @@
     "react-hot-toast": "^2.6.0",
     "react-icons": "^5.5.0",
     "react-router": "^7.10.1",
+    "react-share": "^5.2.2",
     "sweetalert2": "^11.26.4",
     "tailwindcss": "^4.1.17"
   },

@@ -40,16 +40,35 @@ const AuthProvider = ({children}) => {
     return updateProfile(auth.currentUser,profile)
  }
 
- useEffect(()=>{
-    const unsubscribe = onAuthStateChanged(auth,(currentUser)=>{
-      setUser(currentUser)
-      setLoading(false)
+useEffect(() => {
+  const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
 
-    })
-    return ()=>{
-        unsubscribe()
+    if (currentUser?.email) {
+      try {
+        // ✅ fetch role from backend
+        const res = await fetch(
+          `http://localhost:3000/users/role/${currentUser.email}`
+        );
+        const data = await res.json();
+
+        setUser({
+          ...currentUser,
+          role: data.role, // ✅ Inject role here
+        });
+      } catch (error) {
+        console.error("Failed to fetch user role", error);
+        setUser(currentUser);
+      }
+    } else {
+      setUser(null);
     }
- },[])
+
+    setLoading(false);
+  });
+
+  return () => unsubscribe();
+}, []);
+
    
 
 
