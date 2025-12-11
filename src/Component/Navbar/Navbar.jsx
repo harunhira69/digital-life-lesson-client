@@ -1,8 +1,13 @@
 import { Link, NavLink } from "react-router";
+import { FaMoon, FaSun } from "react-icons/fa"; // React icons
 import useAuth from "../../hook/useAuth";
+import { useContext } from "react";
+import { ThemeContext } from "../../Context/ThemeContext";
+
 
 const Navbar = () => {
   const { user, handleSignOut } = useAuth();
+  const { theme, toggleTheme } = useContext(ThemeContext)
 
   const navLinkClass = ({ isActive }) =>
     isActive
@@ -10,7 +15,7 @@ const Navbar = () => {
       : "text-gray-600 hover:text-primary";
 
   return (
-    <nav className="sticky top-0 z-50 bg-white shadow-sm">
+    <nav className="sticky top-0 z-50 bg-white dark:bg-gray-900 shadow-sm transition-colors">
       <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
 
         {/* Logo */}
@@ -21,29 +26,13 @@ const Navbar = () => {
         {/* Desktop Links */}
         <div className="hidden md:flex items-center gap-6">
           <NavLink to="/" className={navLinkClass}>Home</NavLink>
-
-          <NavLink to="/public-lessons" className={navLinkClass}>
-            Public Lessons
-          </NavLink>
+          <NavLink to="/public-lessons" className={navLinkClass}>Public Lessons</NavLink>
 
           {user && (
             <>
-              <NavLink to="/dashboard/add-lesson" className={navLinkClass}>
-                Add Lesson
-              </NavLink>
-
-              <NavLink to="/dashboard/my-lessons" className={navLinkClass}>
-                My Lessons
-              </NavLink>
-
-              {/* ✅ Show only for Free users */}
-              {user.role === "Free" && (
-                <NavLink to="/pricing" className={navLinkClass}>
-                  Upgrade
-                </NavLink>
-              )}
-
-              {/* ✅ Show badge if Premium */}
+              <NavLink to="/dashboard/add-lesson" className={navLinkClass}>Add Lesson</NavLink>
+              <NavLink to="/dashboard/my-lessons" className={navLinkClass}>My Lessons</NavLink>
+              {user.role === "Free" && <NavLink to="/pricing" className={navLinkClass}>Upgrade</NavLink>}
               {user.role === "Premium" && (
                 <span className="px-3 py-1 bg-yellow-300 text-gray-800 rounded-full text-sm font-semibold">
                   Premium ⭐
@@ -53,53 +42,34 @@ const Navbar = () => {
           )}
         </div>
 
-        {/* Auth Area */}
+        {/* Auth Area + Theme Toggle */}
         <div className="flex items-center gap-4">
+          {/* Dark/Light Icon */}
+          <button
+            onClick={toggleTheme}
+            className="text-xl p-2 rounded hover:bg-gray-200 dark:hover:bg-gray-700 transition"
+          >
+            {theme === "light" ? <FaMoon /> : <FaSun />}
+          </button>
+
           {!user ? (
             <>
-              <Link to="/auth/login" className="btn btn-outline btn-sm">
-                Login
-              </Link>
-              <Link to="/auth/register" className="btn btn-primary btn-sm">
-                Signup
-              </Link>
+              <Link to="/auth/login" className="btn btn-outline btn-sm">Login</Link>
+              <Link to="/auth/register" className="btn btn-primary btn-sm">Signup</Link>
             </>
           ) : (
             <div className="dropdown dropdown-end">
-              {/* Avatar */}
               <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
                 <div className="w-10 rounded-full">
-                  <img
-                    src={user.photoURL || "/avatar.png"}
-                    alt="User Avatar"
-                  />
+                  <img src={user.photoURL || "/avatar.png"} alt="User Avatar" />
                 </div>
               </label>
-
-              {/* Dropdown */}
-              <ul
-                tabIndex={0}
-                className="menu menu-sm dropdown-content mt-3 p-3 shadow bg-base-100 rounded-box w-52"
-              >
-                <li className="font-semibold px-2 cursor-default">
-                  {user.displayName || "User"}
-                </li>
-
+              <ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 p-3 shadow bg-base-100 dark:bg-gray-800 rounded-box w-52">
+                <li className="font-semibold px-2 cursor-default">{user.displayName || "User"}</li>
+                <li><Link to="/dashboard">Dashboard</Link></li>
+                <li><Link to="/dashboard/profile">Profile</Link></li>
                 <li>
-                  <Link to="/dashboard">Dashboard</Link>
-                </li>
-
-                <li>
-                  <Link to="/dashboard/profile">Profile</Link>
-                </li>
-
-                <li>
-                  <button
-                    onClick={handleSignOut}
-                    className="text-red-500"
-                  >
-                    Log out
-                  </button>
+                  <button onClick={handleSignOut} className="text-red-500">Log out</button>
                 </li>
               </ul>
             </div>

@@ -7,6 +7,8 @@ import DashboardLayout from "../Layout/DashboardLayout";
 import DashboardHome from "../Dashboard/Dashboard";
 import PublicLesson from "../Pages/PublicLesson/PublicLesson";
 import PricingPage from "../Pages/PricingPage/PricingPage";
+import PaymentSuccess from "../Pages/PricingPage/PaymentSuccess";
+import PaymentCancel from "../Pages/PricingPage/PaymentCancel";
 import NotFound from "../Pages/NotFound/NotFound";
 import PrivateRoutes from "./PrivateRoute";
 import AddLesson from "../Pages/AddLesson/AddLesson";
@@ -36,6 +38,22 @@ const router = createBrowserRouter([
       {
         path:'pricing',
         Component:PricingPage
+      },
+      {
+        path:'payment-success',
+        Component:PaymentSuccess
+      },
+      {
+        path:'payment/success',
+        Component:PaymentSuccess
+      },
+      {
+        path:'payment-cancel',
+        Component:PaymentCancel
+      },
+      {
+        path:'payment/cancel',
+        Component:PaymentCancel
       },
       {
         path:'terms',
