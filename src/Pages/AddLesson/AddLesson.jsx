@@ -1,15 +1,15 @@
 import React, { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
-
-
 import { useNavigate } from "react-router";
 import useAuth from "../../hook/useAuth";
 import useAxiosSecue from "../../hook/useAxiosSecure";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const AddLesson = () => {
   const { user } = useAuth();
   const axiosSecure = useAxiosSecue();
   const navigate = useNavigate();
+  const queryClient = useQueryClient(); // ✅ important
 
   const initialState = {
     title: "",
@@ -28,20 +28,47 @@ const AddLesson = () => {
     setLessonData({ ...lessonData, [name]: value });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const payload = { ...lessonData, email: user.email };
-      const res = await axiosSecure.post("/lessons", payload);
+  // ✅ React Query Mutation
+const addLessonMutation = useMutation({
+  mutationFn: async (newLesson) => {
+    const res = await axiosSecure.post("/lessons", newLesson);
+    return res.data.lesson; // Return the lesson object
+  },
+  onMutate: async (newLesson) => {
+    // Cancel any outgoing fetches
+    await queryClient.cancelQueries({ queryKey: ["public-lessons"] });
 
-      if (res.data?.insertedId) {
-        toast.success("Lesson added successfully!");
-        setLessonData(initialState);
-        navigate("/public-lessons"); // redirect to Public Lessons page
-      }
-    } catch (error) {
-      toast.error(error.response?.data?.message || "Failed to add lesson");
-    }
+    // Snapshot previous lessons
+    const previousLessons = queryClient.getQueryData(["public-lessons"]);
+
+    // Optimistically update UI
+    queryClient.setQueryData(["public-lessons"], (old = []) => [...old, newLesson]);
+
+    return { previousLessons };
+  },
+  onError: (err, newLesson, context) => {
+    queryClient.setQueryData(["public-lessons"], context.previousLessons);
+    toast.error("Failed to add lesson");
+  },
+  onSettled: () => {
+    queryClient.invalidateQueries({ queryKey: ["public-lessons"] });
+  },
+  onSuccess: (createdLesson) => {
+    // Use server-returned lesson to update cache so we have _id and timestamps
+    queryClient.setQueryData(["public-lessons"], (old = []) => {
+      return [...old, createdLesson];
+    });
+    toast.success("Lesson added successfully!");
+    setLessonData(initialState);
+    navigate("/public-lessons");
+  },
+});
+
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const payload = { ...lessonData, email: user.email };
+    addLessonMutation.mutate(payload);
   };
 
   return (
@@ -50,6 +77,7 @@ const AddLesson = () => {
       <h3 className="text-4xl font-bold mb-6">Add Lesson</h3>
 
       <form onSubmit={handleSubmit} className="space-y-4">
+        {/* Title */}
         <div>
           <label>Lesson Title</label>
           <input
@@ -62,8 +90,9 @@ const AddLesson = () => {
           />
         </div>
 
+        {/* Description */}
         <div>
-          <label>Full Description / Story / Insight</label>
+          <label>Full Description</label>
           <textarea
             name="description"
             value={lessonData.description}
@@ -74,6 +103,7 @@ const AddLesson = () => {
           />
         </div>
 
+        {/* Category */}
         <div>
           <label>Category</label>
           <select
@@ -92,6 +122,7 @@ const AddLesson = () => {
           </select>
         </div>
 
+        {/* Emotional Tone */}
         <div>
           <label>Emotional Tone</label>
           <select
@@ -109,6 +140,7 @@ const AddLesson = () => {
           </select>
         </div>
 
+        {/* Image URL */}
         <div>
           <label>Image URL (Optional)</label>
           <input
@@ -121,6 +153,7 @@ const AddLesson = () => {
           />
         </div>
 
+        {/* Privacy */}
         <div>
           <label>Privacy</label>
           <select
@@ -135,6 +168,7 @@ const AddLesson = () => {
           </select>
         </div>
 
+        {/* Access Level */}
         <div>
           <label>Access Level</label>
           <select
@@ -151,11 +185,13 @@ const AddLesson = () => {
           </select>
         </div>
 
+        {/* Submit Button */}
         <button
           type="submit"
           className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+          disabled={addLessonMutation.isLoading}
         >
-          Create Lesson
+          {addLessonMutation.isLoading ? "Creating..." : "Create Lesson"}
         </button>
       </form>
     </div>

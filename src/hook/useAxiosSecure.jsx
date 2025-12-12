@@ -9,7 +9,7 @@ const axiosSecure = axios.create({
 })
 
 
-const useAxiosSecue = () => {
+const useAxiosSecure = () => {
     const navigate = useNavigate();
 
     const {user,handleSignOut} = useAuth();
@@ -48,4 +48,4 @@ useEffect(()=>{
     return axiosSecure
 };
 
-export default useAxiosSecue;
+export default useAxiosSecure;
