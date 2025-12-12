@@ -21,7 +21,7 @@ const MyLessons = () => {
   }, [user, axiosSecure]);
 
   const handleDelete = async id => {
-    if (!window.confirm("Are you sure you want to delete this lesson permanently?")) return;
+    if (!window.confirm("Are you sure you want to delete this lesson permanently bitch?")) return;
     try {
       await axiosSecure.delete(`/lessons/${id}`);
       setLessons(prev => prev.filter(l => l._id !== id));
