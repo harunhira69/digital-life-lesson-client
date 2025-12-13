@@ -9,7 +9,7 @@ import { Toaster } from "react-hot-toast";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-// 1️⃣ Create a QueryClient instance
+// 1️⃣ Create a QueryClient instancec
 const queryClient = new QueryClient();
 
 createRoot(document.getElementById('root')).render(

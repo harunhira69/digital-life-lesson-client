@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
-import { useNavigate } from "react-router";
+
 import useAuth from "../../hook/useAuth";
 import useAxiosSecue from "../../hook/useAxiosSecure";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -8,7 +8,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 const AddLesson = () => {
   const { user } = useAuth();
   const axiosSecure = useAxiosSecue();
-  const navigate = useNavigate();
+
   const queryClient = useQueryClient(); // ✅ important
 
   const initialState = {
@@ -60,7 +60,7 @@ const addLessonMutation = useMutation({
     });
     toast.success("Lesson added successfully!");
     setLessonData(initialState);
-    navigate("/public-lessons");
+    
   },
 });
 
