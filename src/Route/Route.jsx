@@ -19,6 +19,10 @@ import Terms from "../Component/Footer/Terms/Terms";
 import PrivacyPolicy from "../Component/Footer/PrivacyPolicy/PrivacyPolicy";
 import Support from "../Component/Footer/Support/Support";
 import LessonDetails from "../Pages/LessonDetails/LessonDetails";
+import AdminLayout from "../Layout/AdminLayout";
+import ManageUser from "../Dashboard/Admin/ManageUser/ManageUser";
+import ManageLesson from "../Dashboard/Admin/ManageLesson/ManageLesson";
+import ReportedLesson from "../Dashboard/Admin/ReportedLesson/ReportedLesson";
 
 
 const router = createBrowserRouter([
@@ -117,6 +121,24 @@ const router = createBrowserRouter([
     },
   
   ]
+},
+{
+path:'/dashboard/admin',
+element:<AdminLayout></AdminLayout>,
+children:[
+  {
+       path:"/manage-users" ,
+       element:<ManageUser />,
+  },
+  {
+    path:'/manage-lesson',
+    element:<ManageLesson/>
+  },
+  {
+    path:'/report-lesson',
+    element:<ReportedLesson/>
+  }
+]
 },
 {
   path: "*",
