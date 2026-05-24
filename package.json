@@ -16,6 +16,7 @@
     "axios": "^1.13.2",
     "daisyui": "^5.5.8",
     "firebase": "^12.6.0",
+    "lottie-react": "^2.4.1",
     "lucide-react": "^0.556.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
@@ -24,6 +25,7 @@
     "react-router": "^7.10.1",
     "react-share": "^5.2.2",
     "sweetalert2": "^11.26.4",
+    "swiper": "^12.1.4",
     "tailwindcss": "^4.1.17"
   },
   "devDependencies": {

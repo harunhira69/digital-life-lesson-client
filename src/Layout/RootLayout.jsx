@@ -4,14 +4,15 @@ import { Outlet } from 'react-router';
 import Footer from '../Component/Footer/Footer';
 
 const RootLayout = () => {
-    return (
-        <div className='max-w-7xl mx-auto'>
-            <Navbar></Navbar>
-            <Outlet></Outlet>
-            <Footer></Footer>
-            
-        </div>
-    );
+  return (
+    <div className="min-h-screen flex flex-col">
+      <Navbar />
+      <main className="flex-1">
+        <Outlet />
+      </main>
+      <Footer />
+    </div>
+  );
 };
 
 export default RootLayout;

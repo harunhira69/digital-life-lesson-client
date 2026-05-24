@@ -5,6 +5,7 @@ import Login from "../Auth/Login";
 import Register from "../Auth/Register";
 import DashboardLayout from "../Layout/DashboardLayout";
 import DashboardHome from "../Dashboard/Dashboard";
+import Home from "../Pages/Home/Home";
 import PublicLesson from "../Pages/PublicLesson/PublicLesson";
 import PricingPage from "../Pages/PricingPage/PricingPage";
 import PaymentSuccess from "../Pages/PricingPage/PaymentSuccess";
@@ -24,127 +25,54 @@ import ManageUser from "../Dashboard/Admin/ManageUser/ManageUser";
 import ManageLesson from "../Dashboard/Admin/ManageLesson/ManageLesson";
 import ReportedLesson from "../Dashboard/Admin/ReportedLesson/ReportedLesson";
 
-
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <RootLayout></RootLayout>,
-    errorElement:<NotFound></NotFound>,
-    children:[
-      {
-        index: true,
-        element: <PublicLesson></PublicLesson>
-      },
-      {
-        path:'public-lessons',
-        Component:PublicLesson
-      },
-      {
-        path:'pricing',
-        Component:PricingPage
-      },
-      {
-        path:'payment-success',
-        Component:PaymentSuccess
-      },
-      {
-        path:'payment/success',
-        Component:PaymentSuccess
-      },
-      {
-        path:'payment-cancel',
-        Component:PaymentCancel
-      },
-      {
-        path:'payment/cancel',
-        Component:PaymentCancel
-      },
-      {
-        path:'terms',
-        Component:Terms
-      },
-      {
-        path:'privacy',
-        Component:PrivacyPolicy
-      },
-      {
-        path:'support',
-        Component:Support
-      },
-      {
-        path:'life-lesson/:id',
-        element:<LessonDetails></LessonDetails>
-      }
-
-    ]
-  },
-
-  {
-    path:'/auth',
-    element:<AuthLayout></AuthLayout>,
-    children:[
-        {
-            path:'login',
-            Component:Login
-        },
-        {
-            path:'register',
-            Component:Register
-        }
-    ]
-  },
-
-  {
-  path: "/dashboard",
-  element: <DashboardLayout />,
-  children: [
-    { index: true, element: <DashboardHome /> },
-    {
-      path:'add-lesson',
-      element:<PrivateRoutes>
-        <AddLesson></AddLesson>
-      </PrivateRoutes>
-    },
-    {
-      path:'my-lessons',
-      element:<PrivateRoutes>
-        <MyLesson></MyLesson>
-      </PrivateRoutes>
-    },
-    {
-      path:'my-favorites',
-      Component:MyFavorites
-    },
-    {
-      path:'profile',
-      Component:Profile
-    },
-  
-  ]
-},
-{
-path:'/dashboard/admin',
-element:<AdminLayout></AdminLayout>,
-children:[
-  {
-       path:"/manage-users" ,
-       element:<ManageUser />,
+    element: <RootLayout />,
+    errorElement: <NotFound />,
+    children: [
+      { index: true, element: <Home /> },
+      { path: "public-lessons", Component: PublicLesson },
+      { path: "pricing", Component: PricingPage },
+      { path: "payment-success", Component: PaymentSuccess },
+      { path: "payment/success", Component: PaymentSuccess },
+      { path: "payment-cancel", Component: PaymentCancel },
+      { path: "payment/cancel", Component: PaymentCancel },
+      { path: "terms", Component: Terms },
+      { path: "privacy", Component: PrivacyPolicy },
+      { path: "support", Component: Support },
+      { path: "life-lesson/:id", element: <LessonDetails /> },
+    ],
   },
   {
-    path:'/manage-lesson',
-    element:<ManageLesson/>
+    path: "/auth",
+    element: <AuthLayout />,
+    children: [
+      { path: "login", Component: Login },
+      { path: "register", Component: Register },
+    ],
   },
   {
-    path:'/report-lesson',
-    element:<ReportedLesson/>
-  }
-]
-},
-{
-  path: "*",
-  element: <NotFound />
-}
-
+    path: "/dashboard",
+    element: <PrivateRoutes><DashboardLayout /></PrivateRoutes>,
+    children: [
+      { index: true, element: <DashboardHome /> },
+      { path: "add-lesson", element: <AddLesson /> },
+      { path: "my-lessons", element: <MyLesson /> },
+      { path: "my-favorites", Component: MyFavorites },
+      { path: "profile", Component: Profile },
+    ],
+  },
+  {
+    path: "/dashboard/admin",
+    element: <PrivateRoutes><AdminLayout /></PrivateRoutes>,
+    children: [
+      { path: "manage-users", element: <ManageUser /> },
+      { path: "manage-lessons", element: <ManageLesson /> },
+      { path: "reported-lessons", element: <ReportedLesson /> },
+    ],
+  },
+  { path: "*", element: <NotFound /> },
 ]);
 
 export default router;
